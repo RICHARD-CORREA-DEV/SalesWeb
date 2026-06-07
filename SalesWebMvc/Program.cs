@@ -1,11 +1,22 @@
 using Microsoft.EntityFrameworkCore;
-var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("SalesWebMvcContext") ?? throw new InvalidOperationException("Connection string 'SalesWebMvcContext' not found.");
 
-builder.Services.AddDbContext<SalesWebMvcContext>(options => options.UseSqlServer(connectionString));
+var builder = WebApplication.CreateBuilder(args);
+
+// Configuração do MySQL
+var connectionString = builder.Configuration.GetConnectionString("SalesWebMvcContext")
+    ?? throw new InvalidOperationException("Connection string 'SalesWebMvcContext' not found.");
+
+builder.Services.AddDbContext<SalesWebMvcContext>(options =>
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(connectionString),
+        b => b.MigrationsAssembly("SalesWebMvc")
+    )
+);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
 
 var app = builder.Build();
 
@@ -13,21 +24,19 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+// Ativa o suporte a arquivos estáticos (como CSS e JavaScript) no .NET 9
+app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
