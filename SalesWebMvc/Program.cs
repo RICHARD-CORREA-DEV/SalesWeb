@@ -26,6 +26,9 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 builder.Services.AddScoped<SalesWebMvc.Data.SeedingService>();
 
 
+builder.Services.AddScoped<SalesWebMvc.Services.SellerService>();
+
+
 // Compila todas as configurações acima e constrói oficialmente a aplicação (app)
 var app = builder.Build();
 
@@ -49,7 +52,7 @@ else
 
         // Executa o método responsável por popular as tabelas do banco com dados iniciais
         seedingService.Seed();
-
+       
 
     }
 }
