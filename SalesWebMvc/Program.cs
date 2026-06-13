@@ -24,9 +24,8 @@ builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 // REGISTRO DO SEEDINGSERVICE (Injeção de Dependência)
 // Informa ao app que o SeedingService existe e pode ser usado para injetar dados no banco
 builder.Services.AddScoped<SalesWebMvc.Data.SeedingService>();
-
-
 builder.Services.AddScoped<SalesWebMvc.Services.SellerService>();
+builder.Services.AddScoped<SalesWebMvc.Services.DepartmentService>();
 
 
 // Compila todas as configurações acima e constrói oficialmente a aplicação (app)
